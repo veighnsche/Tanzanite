@@ -29,7 +29,7 @@ RUN rm /opt && mkdir /opt
 ### [IM]MUTABLE /usr/local
 ## Same issue as /opt - /usr/local is symlinked to /var/usrlocal in ostree
 ## We need it immutable for Go, Rust, Node.js, etc.
-RUN rm -rf /usr/local && mkdir -p /usr/local/bin /usr/local/go /usr/local/rustup /usr/local/cargo /usr/local/fnm /usr/local/bun
+RUN rm -rf /usr/local && mkdir -p /usr/local/bin /usr/local/go /usr/local/rustup /usr/local/cargo /usr/local/bun
 
 ### MODIFICATIONS
 ## make modifications desired in your image and install packages by modifying the build.sh script

@@ -56,12 +56,11 @@ export CARGO_HOME=/usr/local/cargo
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 chmod -R a+rX /usr/local/rustup /usr/local/cargo
 
-### Node.js via fnm (system-wide)
-curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir /usr/local/fnm --skip-shell
-export PATH="/usr/local/fnm:$PATH"
-eval "$(/usr/local/fnm/fnm env)"
-/usr/local/fnm/fnm install 24
+### Node.js (direct install - fnm has issues in container builds)
+NODE_VERSION="v24.1.0"
+curl -fsSL "https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64.tar.xz" | tar -xJ -C /usr/local --strip-components=1
 corepack enable pnpm
+
 
 ### Bun runtime (system-wide)
 curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr/local/bun bash
