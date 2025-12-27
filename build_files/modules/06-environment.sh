@@ -28,3 +28,6 @@ export PATH=$PATH:$ANDROID_SDK_ROOT/ndk/27.2.12479018
 EOF
 chmod +x /etc/profile.d/tanzanite-dev.sh
 echo "Environment variables configured in /etc/profile.d/tanzanite-dev.sh"
+
+subsection "Verifying environment configuration"
+verify_path /etc/profile.d/tanzanite-dev.sh "tanzanite-dev.sh profile" || exit 1

@@ -29,3 +29,8 @@ else
 fi
 mkdir -p /usr/local/bin /usr/local/go /usr/local/rustup /usr/local/cargo /usr/local/bun
 echo "Created /usr/local subdirectories"
+
+subsection "Verifying filesystem setup"
+verify_path /opt "opt directory" && \
+verify_path /usr/local "usr/local directory" && \
+verify_path /usr/local/bin "usr/local/bin directory" || exit 1

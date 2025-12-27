@@ -33,3 +33,8 @@ dnf5 install -y --enablerepo=windsurf windsurf
 subsection "Setting hostname"
 echo "tanzanite" > /etc/hostname
 echo "Hostname set to: tanzanite"
+
+subsection "Verifying base packages"
+verify_command tmux && \
+verify_command mosh && \
+verify_command windsurf "Windsurf IDE" || exit 1

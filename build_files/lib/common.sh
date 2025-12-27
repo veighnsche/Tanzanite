@@ -88,3 +88,49 @@ is_ublue() {
 is_fedora_atomic() {
     [[ "$BASE_NAME" == "cosmic" ]]
 }
+
+#-------------------------------------------------------------------------------
+# Verification Functions
+#-------------------------------------------------------------------------------
+
+# Verify a command exists and is executable
+# Usage: verify_command <command> [description]
+verify_command() {
+    local cmd=$1
+    local desc=${2:-$cmd}
+    if command -v "$cmd" &>/dev/null; then
+        echo "  ✓ $desc: $(command -v "$cmd")"
+        return 0
+    else
+        echo "  ✗ FAILED: $desc not found in PATH"
+        return 1
+    fi
+}
+
+# Verify a file or directory exists
+# Usage: verify_path <path> [description]
+verify_path() {
+    local path=$1
+    local desc=${2:-$path}
+    if [[ -e "$path" ]]; then
+        echo "  ✓ $desc: $path"
+        return 0
+    else
+        echo "  ✗ FAILED: $desc not found at $path"
+        return 1
+    fi
+}
+
+# Verify a command runs successfully and optionally check output
+# Usage: verify_runs <command> [description]
+verify_runs() {
+    local desc=$1
+    shift
+    if "$@" &>/dev/null; then
+        echo "  ✓ $desc"
+        return 0
+    else
+        echo "  ✗ FAILED: $desc"
+        return 1
+    fi
+}

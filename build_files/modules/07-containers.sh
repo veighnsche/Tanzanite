@@ -12,6 +12,11 @@ subsection "Enabling system services"
 systemctl enable podman.socket
 echo "podman.socket enabled"
 
+subsection "Verifying container runtimes"
+verify_command podman && \
+verify_command docker "docker (podman-docker)" && \
+verify_command docker-compose || exit 1
+
 section "Build Complete"
 echo ""
 echo "========================================"

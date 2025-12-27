@@ -31,3 +31,9 @@ dnf5 install -y \
     java-21-openjdk-devel
 echo "AOSP build dependencies installed"
 echo "Java version: $(java -version 2>&1 | head -1)"
+
+subsection "Verifying development tools"
+verify_command gcc && \
+verify_command g++ "g++" && \
+verify_command make && \
+verify_command java "Java 21" || exit 1

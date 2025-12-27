@@ -69,3 +69,12 @@ EOF
 # Download scrcpy icon
 download_file "https://raw.githubusercontent.com/Genymobile/scrcpy/master/app/data/icon.png" /usr/share/icons/hicolor/256x256/apps/scrcpy.png
 echo "scrcpy desktop entry created"
+
+subsection "Verifying Android tools"
+verify_command repo "Android repo tool" && \
+verify_path "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" "sdkmanager" && \
+verify_path "$ANDROID_SDK_ROOT/platform-tools/adb" "adb" && \
+verify_path "$ANDROID_SDK_ROOT/platform-tools/fastboot" "fastboot" && \
+verify_path "$ANDROID_SDK_ROOT/ndk/27.2.12479018" "NDK 27.2" && \
+verify_command scrcpy && \
+verify_path /usr/share/applications/scrcpy.desktop "scrcpy desktop entry" || exit 1

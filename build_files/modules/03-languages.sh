@@ -45,3 +45,11 @@ chmod +x /tmp/bun-install.sh
 BUN_INSTALL=/usr/local/bun /tmp/bun-install.sh
 rm /tmp/bun-install.sh
 echo "Bun installed: $(/usr/local/bun/bin/bun --version)"
+
+subsection "Verifying programming languages"
+verify_command python3 "Python" && \
+verify_command uv "uv package manager" && \
+verify_runs "Go version" /usr/local/go/bin/go version && \
+verify_runs "Rust version" /usr/local/cargo/bin/rustc --version && \
+verify_command node "Node.js" && \
+verify_runs "Bun version" /usr/local/bun/bin/bun --version || exit 1
