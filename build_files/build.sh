@@ -141,7 +141,8 @@ mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-to
 rm /tmp/cmdline-tools.zip
 
 # Accept licenses and install platform-tools, build-tools, NDK
-yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses
+# Accept licenses (ignore SIGPIPE from yes command)
+yes 2>/dev/null | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses || true
 "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" \
     "platform-tools" \
     "build-tools;35.0.0" \
