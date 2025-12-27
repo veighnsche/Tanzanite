@@ -74,30 +74,19 @@ dnf5 install -y \
     automake \
     autoconf \
     libtool \
-    pkgconf \
-    git \
-    gnupg2 \
     flex \
     bison \
-    zip \
-    unzip \
-    curl \
-    wget \
     patch \
-    diffutils \
     zlib-devel \
     glibc-devel.i686 \
     libstdc++-devel.i686 \
-    zlib-devel.i686 \
+    zlib-ng-compat-devel.i686 \
     xorg-x11-proto-devel \
     libX11-devel \
     mesa-libGL-devel \
-    libxml2 \
-    libxslt \
-    fontconfig \
     ncurses-devel \
     readline-devel \
-    java-17-openjdk-devel
+    java-21-openjdk-devel
 
 ### Android repo tool
 mkdir -p /usr/local/bin
