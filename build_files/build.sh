@@ -5,20 +5,110 @@ set -ouex pipefail
 ### Install packages
 
 # Packages can be installed from any enabled yum repo on the image.
-# RPMfusion repos are available by default in ublue main images
-# List of rpmfusion packages can be found here:
-# https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/39/x86_64/repoview/index.html&protocol=https&redirect=1
 
-# this installs a package from fedora repos
-dnf5 install -y tmux 
+# Basic packages
+dnf5 install -y tmux
 
-# Use a COPR Example:
-#
-# dnf5 -y copr enable ublue-os/staging
-# dnf5 -y install package
-# Disable COPRs so they don't end up enabled on the final image:
-# dnf5 -y copr disable ublue-os/staging
+### Kernel Zen
+dnf5 copr enable -y georgespk/kernel-gcc-zen
+dnf5 install -y kernel kernel-devel kernel-headers
+dnf5 copr disable -y georgespk/kernel-gcc-zen
 
-#### Example for enabling a System Unit File
+### Windsurf IDE
+rpm --import https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/yum/RPM-GPG-KEY-windsurf
+cat > /etc/yum.repos.d/windsurf.repo << 'EOF'
+[windsurf]
+name=Windsurf Repository
+baseurl=https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/yum/repo/
+enabled=0
+autorefresh=1
+gpgcheck=1
+gpgkey=https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/yum/RPM-GPG-KEY-windsurf
+EOF
+dnf5 install -y --enablerepo=windsurf windsurf
+
+### Set hostname
+echo "tanzanite" > /etc/hostname
+
+### Python (ensure available)
+dnf5 install -y python3 python3-pip python3-devel
+
+### Go toolchain
+curl -L https://go.dev/dl/go1.23.5.linux-amd64.tar.gz -o /tmp/go.tar.gz
+rm -rf /usr/local/go
+tar -C /usr/local -xzf /tmp/go.tar.gz
+rm /tmp/go.tar.gz
+
+### Rust toolchain (system-wide via rustup)
+export RUSTUP_HOME=/usr/local/rustup
+export CARGO_HOME=/usr/local/cargo
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+chmod -R a+rX /usr/local/rustup /usr/local/cargo
+
+### Node.js via fnm (system-wide)
+curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir /usr/local/fnm --skip-shell
+export PATH="/usr/local/fnm:$PATH"
+eval "$(/usr/local/fnm/fnm env)"
+/usr/local/fnm/fnm install 24
+corepack enable pnpm
+
+### Bun runtime (system-wide)
+curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr/local/bun bash
+
+### Development tool groups
+dnf5 group install -y "Development Tools"
+dnf5 group install -y "C Development Tools and Libraries"
+
+### AOSP development packages (RPM equivalents of Ubuntu packages)
+dnf5 install -y \
+    gnupg2 \
+    flex \
+    bison \
+    zip \
+    unzip \
+    curl \
+    zlib-devel \
+    glibc-devel.i686 \
+    libstdc++-devel.i686 \
+    zlib-devel.i686 \
+    xorg-x11-proto-devel \
+    libX11-devel \
+    mesa-libGL-devel \
+    libxml2 \
+    libxslt \
+    fontconfig \
+    ncurses-devel \
+    readline-devel \
+    java-17-openjdk-devel
+
+### Android repo tool
+mkdir -p /usr/local/bin
+curl -L https://storage.googleapis.com/git-repo-downloads/repo -o /usr/local/bin/repo
+chmod a+rx /usr/local/bin/repo
+
+### Set up PATH for all users via profile.d
+cat > /etc/profile.d/tanzanite-dev.sh << 'EOF'
+# Go
+export PATH=$PATH:/usr/local/go/bin
+
+# Rust
+export RUSTUP_HOME=/usr/local/rustup
+export CARGO_HOME=/usr/local/cargo
+export PATH=$PATH:/usr/local/cargo/bin
+
+# fnm (Node.js)
+export PATH="/usr/local/fnm:$PATH"
+eval "$(/usr/local/fnm/fnm env 2>/dev/null)" || true
+
+# Bun
+export BUN_INSTALL=/usr/local/bun
+export PATH=$PATH:/usr/local/bun/bin
+
+# Android repo
+export PATH=$PATH:/usr/local/bin
+EOF
+chmod +x /etc/profile.d/tanzanite-dev.sh
+
+#### Enable System Services
 
 systemctl enable podman.socket
