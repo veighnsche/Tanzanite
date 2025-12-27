@@ -7,12 +7,20 @@ set -ouex pipefail
 # Packages can be installed from any enabled yum repo on the image.
 
 # Basic packages
-dnf5 install -y tmux
+dnf5 install -y tmux mosh
 
-### Kernel Zen
-dnf5 copr enable -y georgespk/kernel-gcc-zen
-dnf5 install -y kernel kernel-devel kernel-headers
-dnf5 copr disable -y georgespk/kernel-gcc-zen
+### Kernel CachyOS (zen-like optimizations, supports newer Fedora)
+# Note: kernel-gcc-zen COPR doesn't support F43 yet, using CachyOS instead
+FEDORA_VERSION=$(rpm -E %fedora)
+if curl -sSf "https://copr.fedorainfracloud.org/coprs/bieszczaders/kernel-cachyos/repo/fedora-${FEDORA_VERSION}/" >/dev/null 2>&1; then
+    dnf5 copr enable -y bieszczaders/kernel-cachyos
+    dnf5 install -y kernel-cachyos kernel-cachyos-devel-matched
+    dnf5 copr disable -y bieszczaders/kernel-cachyos
+    # SELinux policy for kernel module loading
+    setsebool -P domain_kernel_load_modules on || true
+else
+    echo "WARNING: CachyOS kernel COPR not available for Fedora ${FEDORA_VERSION}, using stock kernel"
+fi
 
 ### Windsurf IDE
 rpm --import https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/yum/RPM-GPG-KEY-windsurf
@@ -30,8 +38,11 @@ dnf5 install -y --enablerepo=windsurf windsurf
 ### Set hostname
 echo "tanzanite" > /etc/hostname
 
-### Python (ensure available)
+### Python (ensure available) + uv package manager
 dnf5 install -y python3 python3-pip python3-devel
+curl -LsSf https://astral.sh/uv/install.sh | UV_INSTALL_DIR=/usr/local/uv sh
+ln -sf /usr/local/uv/uv /usr/local/bin/uv
+ln -sf /usr/local/uv/uvx /usr/local/bin/uvx
 
 ### Go toolchain
 curl -L https://go.dev/dl/go1.23.5.linux-amd64.tar.gz -o /tmp/go.tar.gz
@@ -108,6 +119,9 @@ export PATH=$PATH:/usr/local/bun/bin
 export PATH=$PATH:/usr/local/bin
 EOF
 chmod +x /etc/profile.d/tanzanite-dev.sh
+
+### Container runtimes
+dnf5 install -y podman podman-docker docker-compose
 
 #### Enable System Services
 
