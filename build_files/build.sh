@@ -65,18 +65,26 @@ corepack enable pnpm
 ### Bun runtime (system-wide)
 curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr/local/bun bash
 
-### Development tool groups
-dnf5 group install -y "Development Tools"
-dnf5 group install -y "C Development Tools and Libraries"
-
-### AOSP development packages (RPM equivalents of Ubuntu packages)
+### Development tools and AOSP packages
+# Note: "Development Tools" group doesn't exist in F43, installing packages directly
 dnf5 install -y \
+    gcc \
+    gcc-c++ \
+    make \
+    automake \
+    autoconf \
+    libtool \
+    pkgconf \
+    git \
     gnupg2 \
     flex \
     bison \
     zip \
     unzip \
     curl \
+    wget \
+    patch \
+    diffutils \
     zlib-devel \
     glibc-devel.i686 \
     libstdc++-devel.i686 \
