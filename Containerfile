@@ -1,14 +1,16 @@
-# Allow build scripts to be referenced without being copied into the final image
-FROM scratch AS ctx
-COPY build_files /
-
-# Base Image - configurable via build arg
+# Base Image - configurable via build arg (must be before any FROM)
 # Supported bases:
 #   - cosmic: quay.io/fedora-ostree-desktops/cosmic-atomic:43
 #   - aurora: ghcr.io/ublue-os/aurora:stable
 #   - bluefin: ghcr.io/ublue-os/bluefin:stable
 #   - bazzite: ghcr.io/ublue-os/bazzite:stable
 ARG BASE_IMAGE="ghcr.io/ublue-os/aurora:stable"
+
+# Allow build scripts to be referenced without being copied into the final image
+FROM scratch AS ctx
+COPY build_files /
+
+# Main image stage
 FROM ${BASE_IMAGE}
 
 # Re-declare after FROM to make available in build stage
