@@ -2,6 +2,10 @@ export image_name := env("IMAGE_NAME", "tanzanite") # output image name, usually
 export default_tag := env("DEFAULT_TAG", "latest")
 export bib_image := env("BIB_IMAGE", "quay.io/centos-bootc/bootc-image-builder:latest")
 
+# Base image variants
+export default_base_name := env("BASE_NAME", "aurora")
+export default_base_image := env("BASE_IMAGE", "ghcr.io/ublue-os/aurora:stable")
+
 alias build-vm := build-qcow2
 alias rebuild-vm := rebuild-qcow2
 alias run-vm := run-vm-qcow2
@@ -86,19 +90,45 @@ sudoif command *args:
 #
 
 # Build the image using the specified parameters
-build $target_image=image_name $tag=default_tag:
+# Example: just build tanzanite-cosmic latest cosmic quay.io/fedora-ostree-desktops/cosmic-atomic:43
+# Example: just build tanzanite-aurora latest aurora ghcr.io/ublue-os/aurora:stable
+build $target_image=image_name $tag=default_tag $base_name=default_base_name $base_image=default_base_image:
     #!/usr/bin/env bash
 
     BUILD_ARGS=()
+    BUILD_ARGS+=("--build-arg" "BASE_IMAGE=${base_image}")
+    BUILD_ARGS+=("--build-arg" "BASE_NAME=${base_name}")
     if [[ -z "$(git status -s)" ]]; then
         BUILD_ARGS+=("--build-arg" "SHA_HEAD_SHORT=$(git rev-parse --short HEAD)")
     fi
 
+    echo "Building ${target_image}:${tag} from base: ${base_name} (${base_image})"
     podman build \
         "${BUILD_ARGS[@]}" \
         --pull=newer \
         --tag "${target_image}:${tag}" \
         .
+
+# Build cosmic variant (default)
+[group('Build Variants')]
+build-cosmic $tag=default_tag:
+    just build "{{image_name}}-cosmic" "{{tag}}" cosmic "quay.io/fedora-ostree-desktops/cosmic-atomic:43"
+
+# Build aurora variant
+[group('Build Variants')]
+build-aurora $tag=default_tag:
+    just build "{{image_name}}-aurora" "{{tag}}" aurora "ghcr.io/ublue-os/aurora:stable"
+
+# Build bluefin variant
+[group('Build Variants')]
+build-bluefin $tag=default_tag:
+    just build "{{image_name}}-bluefin" "{{tag}}" bluefin "ghcr.io/ublue-os/bluefin:stable"
+
+# Build all variants
+[group('Build Variants')]
+build-all $tag=default_tag:
+    just build-cosmic "{{tag}}"
+    just build-aurora "{{tag}}"
 
 # Command: _rootful_load_image
 # Description: This script checks if the current user is root or running under sudo. If not, it attempts to resolve the image tag using podman inspect.

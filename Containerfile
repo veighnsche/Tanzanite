@@ -2,34 +2,18 @@
 FROM scratch AS ctx
 COPY build_files /
 
-# Base Image - Fedora COSMIC Atomic Desktop
-FROM quay.io/fedora-ostree-desktops/cosmic-atomic:43
+# Base Image - configurable via build arg
+# Supported bases:
+#   - cosmic: quay.io/fedora-ostree-desktops/cosmic-atomic:43
+#   - aurora: ghcr.io/ublue-os/aurora:stable
+#   - bluefin: ghcr.io/ublue-os/bluefin:stable
+#   - bazzite: ghcr.io/ublue-os/bazzite:stable
+ARG BASE_IMAGE="ghcr.io/ublue-os/aurora:stable"
+FROM ${BASE_IMAGE}
 
-## Other possible base images include:
-# FROM ghcr.io/ublue-os/bazzite:stable
-# FROM ghcr.io/ublue-os/aurora:stable
-# FROM ghcr.io/ublue-os/bluefin:stable
-# 
-# ... and so on, here are more base images
-# Universal Blue Images: https://github.com/orgs/ublue-os/packages
-# Fedora base image: quay.io/fedora/fedora-bootc:41
-# CentOS base images: quay.io/centos-bootc/centos-bootc:stream10
-
-### [IM]MUTABLE /opt
-## Some bootable images, like Fedora, have /opt symlinked to /var/opt, in order to
-## make it mutable/writable for users. However, some packages write files to this directory,
-## thus its contents might be wiped out when bootc deploys an image, making it troublesome for
-## some packages. Eg, google-chrome, docker-desktop.
-##
-## Uncomment the following line if one desires to make /opt immutable and be able to be used
-## by the package manager.
-
-RUN rm /opt && mkdir /opt
-
-### [IM]MUTABLE /usr/local
-## Same issue as /opt - /usr/local is symlinked to /var/usrlocal in ostree
-## We need it immutable for Go, Rust, Node.js, etc.
-RUN rm -rf /usr/local && mkdir -p /usr/local/bin /usr/local/go /usr/local/rustup /usr/local/cargo /usr/local/bun
+# Re-declare after FROM to make available in build stage
+ARG BASE_NAME="aurora"
+ENV BASE_NAME=${BASE_NAME}
 
 ### MODIFICATIONS
 ## make modifications desired in your image and install packages by modifying the build.sh script
@@ -39,7 +23,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \
     --mount=type=cache,dst=/var/log \
     --mount=type=tmpfs,dst=/tmp \
-    /ctx/build.sh
+    BASE_NAME=${BASE_NAME} /ctx/build.sh
     
 ### LINTING
 ## Verify final image and contents are correct.

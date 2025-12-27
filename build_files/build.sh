@@ -2,6 +2,46 @@
 
 set -ouex pipefail
 
+# BASE_NAME is passed from Containerfile (cosmic, aurora, bluefin, bazzite)
+BASE_NAME="${BASE_NAME:-cosmic}"
+echo "Building for base: ${BASE_NAME}"
+
+# Helper function to check if we're on a uBlue base
+is_ublue() {
+    [[ "$BASE_NAME" == "aurora" || "$BASE_NAME" == "bluefin" || "$BASE_NAME" == "bazzite" ]]
+}
+
+# Helper function to check if we're on vanilla Fedora Atomic
+is_fedora_atomic() {
+    [[ "$BASE_NAME" == "cosmic" ]]
+}
+
+### Filesystem fixes for vanilla Fedora Atomic
+# uBlue bases already have these fixed, so only run on cosmic/fedora-atomic
+if is_fedora_atomic; then
+    echo "Applying Fedora Atomic filesystem fixes..."
+    
+    # [IM]MUTABLE /opt
+    # Fedora has /opt symlinked to /var/opt, making it mutable.
+    # Some packages (google-chrome, docker-desktop) write to /opt,
+    # which gets wiped on bootc deploy. Make it immutable.
+    if [[ -L /opt ]]; then
+        rm /opt && mkdir /opt
+    fi
+    
+    # [IM]MUTABLE /usr/local
+    # Same issue - /usr/local is symlinked to /var/usrlocal in ostree
+    # We need it immutable for Go, Rust, Node.js, etc.
+    if [[ -L /usr/local ]]; then
+        rm -rf /usr/local
+    fi
+    mkdir -p /usr/local/bin /usr/local/go /usr/local/rustup /usr/local/cargo /usr/local/bun
+else
+    echo "Skipping Fedora Atomic filesystem fixes (uBlue base detected)"
+    # Ensure directories exist for dev tools even on uBlue
+    mkdir -p /usr/local/bin /usr/local/go /usr/local/rustup /usr/local/cargo /usr/local/bun
+fi
+
 ### Install packages
 
 # Packages can be installed from any enabled yum repo on the image.
