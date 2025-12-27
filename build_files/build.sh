@@ -39,9 +39,10 @@ echo "tanzanite" > /etc/hostname
 
 ### Python (ensure available) + uv package manager
 dnf5 install -y python3 python3-pip python3-devel
-curl -LsSf https://astral.sh/uv/install.sh | UV_INSTALL_DIR=/usr/local/uv sh
-ln -sf /usr/local/uv/uv /usr/local/bin/uv
-ln -sf /usr/local/uv/uvx /usr/local/bin/uvx
+# Install uv directly (installer script has issues with ostree filesystem)
+mkdir -p /usr/local/bin
+curl -LsSf https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-unknown-linux-gnu.tar.gz | tar -xz -C /usr/local/bin --strip-components=1
+chmod +x /usr/local/bin/uv /usr/local/bin/uvx
 
 ### Go toolchain
 curl -L https://go.dev/dl/go1.23.5.linux-amd64.tar.gz -o /tmp/go.tar.gz
