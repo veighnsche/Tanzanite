@@ -16,16 +16,18 @@ echo "uv installed: $(uv --version)"
 # TEAM_003: Pre-cache common Python packages
 subsection "Pre-caching Python/uv packages"
 export UV_CACHE_DIR=/usr/share/uv-cache
-mkdir -p "$UV_CACHE_DIR"
-uv cache dir  # Verify cache location
-# Pre-install common dev tools into system cache
+export UV_TOOL_DIR=/usr/share/uv-tools
+export UV_TOOL_BIN_DIR=/usr/local/bin
+mkdir -p "$UV_CACHE_DIR" "$UV_TOOL_DIR"
+# Pre-install common dev tools into system locations
 uv tool install ruff
 uv tool install black
 uv tool install mypy
 uv tool install pytest
 uv tool install ipython
-chmod -R a+rX "$UV_CACHE_DIR" /root/.local/share/uv 2>/dev/null || true
+chmod -R a+rX "$UV_CACHE_DIR" "$UV_TOOL_DIR"
 echo "Python/uv cache: $UV_CACHE_DIR"
+echo "Python/uv tools: $UV_TOOL_DIR"
 
 subsection "Installing Go toolchain"
 GO_VERSION="1.23.5"

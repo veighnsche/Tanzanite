@@ -9,7 +9,7 @@ cat > /etc/profile.d/tanzanite-dev.sh << 'EOF'
 # TEAM_003: Python/uv
 export UV_CACHE_DIR=/usr/share/uv-cache
 export UV_TOOL_DIR=/usr/share/uv-tools
-export PATH=$PATH:/root/.local/bin
+export UV_TOOL_BIN_DIR=/usr/local/bin
 
 # Go
 export GOPATH=/usr/share/go
