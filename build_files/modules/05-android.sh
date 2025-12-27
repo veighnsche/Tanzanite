@@ -42,8 +42,30 @@ echo "  - ndk;27.2.12479018"
 echo "  - cmake;3.22.1"
 
 subsection "Installing scrcpy (screen mirroring)"
+# NOTE: Do NOT use dnf scrcpy - it's outdated and broken
 SCRCPY_VERSION="3.3.4"
 download_file "https://github.com/Genymobile/scrcpy/releases/download/v${SCRCPY_VERSION}/scrcpy-linux-x86_64-v${SCRCPY_VERSION}.tar.gz" /tmp/scrcpy.tar.gz
-tar -xz -C /usr/local --strip-components=1 -f /tmp/scrcpy.tar.gz
+mkdir -p /opt/scrcpy
+tar -xz -C /opt/scrcpy --strip-components=1 -f /tmp/scrcpy.tar.gz
 rm /tmp/scrcpy.tar.gz
-echo "scrcpy v${SCRCPY_VERSION} installed"
+# Symlink to PATH
+ln -sf /opt/scrcpy/scrcpy /usr/local/bin/scrcpy
+chmod +x /opt/scrcpy/scrcpy /usr/local/bin/scrcpy
+echo "scrcpy v${SCRCPY_VERSION} installed to /opt/scrcpy"
+
+subsection "Creating scrcpy desktop entry"
+mkdir -p /usr/share/applications /usr/share/icons/hicolor/256x256/apps
+cat > /usr/share/applications/scrcpy.desktop << 'EOF'
+[Desktop Entry]
+Name=scrcpy
+Comment=Display and control Android devices
+Exec=/opt/scrcpy/scrcpy
+Icon=scrcpy
+Terminal=false
+Type=Application
+Categories=Development;Utility;
+Keywords=android;mirror;screen;adb;
+EOF
+# Download scrcpy icon
+download_file "https://raw.githubusercontent.com/Genymobile/scrcpy/master/app/data/icon.png" /usr/share/icons/hicolor/256x256/apps/scrcpy.png
+echo "scrcpy desktop entry created"
