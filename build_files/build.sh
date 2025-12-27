@@ -129,6 +129,32 @@ mkdir -p /usr/local/bin
 curl -L https://storage.googleapis.com/git-repo-downloads/repo -o /usr/local/bin/repo
 chmod a+rx /usr/local/bin/repo
 
+### Android SDK Command-line Tools & NDK
+ANDROID_SDK_ROOT=/usr/local/android-sdk
+mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
+
+# Download command-line tools
+CMDLINE_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip"
+curl -L "$CMDLINE_TOOLS_URL" -o /tmp/cmdline-tools.zip
+unzip -q /tmp/cmdline-tools.zip -d "$ANDROID_SDK_ROOT/cmdline-tools"
+mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-tools/latest"
+rm /tmp/cmdline-tools.zip
+
+# Accept licenses and install platform-tools, build-tools, NDK
+yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses
+"$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" \
+    "platform-tools" \
+    "build-tools;35.0.0" \
+    "platforms;android-35" \
+    "ndk;27.2.12479018" \
+    "cmake;3.22.1"
+
+chmod -R a+rX "$ANDROID_SDK_ROOT"
+
+### scrcpy (Android screen mirroring) - from GitHub, repo version is outdated
+SCRCPY_VERSION="3.3.4"
+curl -L "https://github.com/Genymobile/scrcpy/releases/download/v${SCRCPY_VERSION}/scrcpy-linux-x86_64-v${SCRCPY_VERSION}.tar.gz" | tar -xz -C /usr/local --strip-components=1
+
 ### Set up PATH for all users via profile.d
 cat > /etc/profile.d/tanzanite-dev.sh << 'EOF'
 # Go
@@ -149,6 +175,14 @@ export PATH=$PATH:/usr/local/bun/bin
 
 # Android repo
 export PATH=$PATH:/usr/local/bin
+
+# Android SDK
+export ANDROID_SDK_ROOT=/usr/local/android-sdk
+export ANDROID_HOME=$ANDROID_SDK_ROOT
+export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+export PATH=$PATH:$ANDROID_SDK_ROOT/build-tools/35.0.0
+export PATH=$PATH:$ANDROID_SDK_ROOT/ndk/27.2.12479018
 EOF
 chmod +x /etc/profile.d/tanzanite-dev.sh
 
