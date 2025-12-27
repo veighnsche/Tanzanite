@@ -4,6 +4,10 @@
 
 section "Part 3: Programming Languages"
 
+# TEAM_003: Install C compiler early - needed for compiling language tooling (Rust crates, etc.)
+subsection "Installing build essentials for language tooling"
+dnf5 install -y gcc gcc-c++ make pkg-config openssl-devel
+
 subsection "Installing Python + uv package manager"
 dnf5 install -y python3 python3-pip python3-devel
 mkdir -p /usr/local/bin
@@ -83,12 +87,14 @@ echo "Node.js installed: $(node --version)"
 subsection "Pre-caching Node.js global packages"
 export NPM_CONFIG_CACHE=/usr/share/npm-cache
 export PNPM_HOME=/usr/share/pnpm
-mkdir -p "$NPM_CONFIG_CACHE" "$PNPM_HOME"
+export COREPACK_HOME=/usr/share/corepack
+mkdir -p "$NPM_CONFIG_CACHE" "$PNPM_HOME" "$COREPACK_HOME" /root/.cache/node/corepack
 export PATH="$PNPM_HOME:$PATH"
 # Install common global packages
 npm install -g typescript ts-node eslint prettier @biomejs/biome turbo nx
-pnpm setup
-chmod -R a+rX "$NPM_CONFIG_CACHE" "$PNPM_HOME" /usr/local/lib/node_modules
+# pnpm is already enabled via corepack, just verify it works
+pnpm --version
+chmod -R a+rX "$NPM_CONFIG_CACHE" "$PNPM_HOME" "$COREPACK_HOME" /usr/local/lib/node_modules
 echo "npm cache: $NPM_CONFIG_CACHE"
 echo "pnpm home: $PNPM_HOME"
 

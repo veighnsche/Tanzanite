@@ -26,6 +26,7 @@ export PATH=$PATH:/usr/local/cargo/bin
 # Node.js/npm/pnpm
 export NPM_CONFIG_CACHE=/usr/share/npm-cache
 export PNPM_HOME=/usr/share/pnpm
+export COREPACK_HOME=/usr/share/corepack
 export PATH=$PATH:$PNPM_HOME
 
 # Bun
