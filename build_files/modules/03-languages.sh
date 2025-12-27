@@ -8,6 +8,11 @@ section "Part 3: Programming Languages"
 subsection "Installing build essentials for language tooling"
 dnf5 install -y gcc gcc-c++ make pkg-config openssl-devel
 
+# TEAM_003: Create /root directory structure for tools that expect HOME=/root
+# Some tools (Flutter, corepack, etc.) need /root to exist
+mkdir -p /root/.cache /root/.local/share
+export HOME=/root
+
 subsection "Installing Python + uv package manager"
 dnf5 install -y python3 python3-pip python3-devel
 mkdir -p /usr/local/bin
@@ -123,9 +128,7 @@ git config --system --add safe.directory "$FLUTTER_DIR"
 ln -sf "$FLUTTER_DIR/bin/flutter" /usr/bin/flutter
 ln -sf "$FLUTTER_DIR/bin/dart" /usr/bin/dart
 
-# Create required directories for Flutter/Dart (container may not have /root)
-mkdir -p /root
-export HOME=/root
+# Set pub cache location (HOME=/root already set at module start)
 export PUB_CACHE=/usr/share/flutter/.pub-cache
 
 # Precache ALL platform binaries during build (filesystem is read-only at runtime)
