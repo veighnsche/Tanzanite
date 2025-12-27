@@ -16,31 +16,27 @@ is_fedora_atomic() {
     [[ "$BASE_NAME" == "cosmic" ]]
 }
 
-### Filesystem fixes for vanilla Fedora Atomic
-# uBlue bases already have these fixed, so only run on cosmic/fedora-atomic
-if is_fedora_atomic; then
-    echo "Applying Fedora Atomic filesystem fixes..."
-    
-    # [IM]MUTABLE /opt
-    # Fedora has /opt symlinked to /var/opt, making it mutable.
-    # Some packages (google-chrome, docker-desktop) write to /opt,
-    # which gets wiped on bootc deploy. Make it immutable.
-    if [[ -L /opt ]]; then
-        rm /opt && mkdir /opt
-    fi
-    
-    # [IM]MUTABLE /usr/local
-    # Same issue - /usr/local is symlinked to /var/usrlocal in ostree
-    # We need it immutable for Go, Rust, Node.js, etc.
-    if [[ -L /usr/local ]]; then
-        rm -rf /usr/local
-    fi
-    mkdir -p /usr/local/bin /usr/local/go /usr/local/rustup /usr/local/cargo /usr/local/bun
-else
-    echo "Skipping Fedora Atomic filesystem fixes (uBlue base detected)"
-    # Ensure directories exist for dev tools even on uBlue
-    mkdir -p /usr/local/bin /usr/local/go /usr/local/rustup /usr/local/cargo /usr/local/bun
+### Filesystem fixes
+# Both Fedora Atomic and uBlue bases may have /opt and /usr/local as symlinks
+# We need them to be real directories for packages and dev tools
+
+# [IM]MUTABLE /opt
+# Fedora has /opt symlinked to /var/opt, making it mutable.
+# Some packages (google-chrome, docker-desktop) write to /opt,
+# which gets wiped on bootc deploy. Make it immutable.
+if [[ -L /opt ]]; then
+    echo "Fixing /opt symlink..."
+    rm /opt && mkdir /opt
 fi
+
+# [IM]MUTABLE /usr/local
+# /usr/local may be symlinked to /var/usrlocal in ostree-based systems
+# We need it immutable for Go, Rust, Node.js, etc.
+if [[ -L /usr/local ]]; then
+    echo "Fixing /usr/local symlink..."
+    rm -rf /usr/local
+fi
+mkdir -p /usr/local/bin /usr/local/go /usr/local/rustup /usr/local/cargo /usr/local/bun
 
 ### Install packages
 
