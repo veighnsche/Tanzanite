@@ -9,18 +9,17 @@ set -ouex pipefail
 # Basic packages
 dnf5 install -y tmux mosh
 
-### Kernel CachyOS (zen-like optimizations, supports newer Fedora)
-# Note: kernel-gcc-zen COPR doesn't support F43 yet, using CachyOS instead
-FEDORA_VERSION=$(rpm -E %fedora)
-if curl -sSf "https://copr.fedorainfracloud.org/coprs/bieszczaders/kernel-cachyos/repo/fedora-${FEDORA_VERSION}/" >/dev/null 2>&1; then
-    dnf5 copr enable -y bieszczaders/kernel-cachyos
-    dnf5 install -y kernel-cachyos kernel-cachyos-devel-matched
-    dnf5 copr disable -y bieszczaders/kernel-cachyos
-    # SELinux policy for kernel module loading
-    setsebool -P domain_kernel_load_modules on || true
-else
-    echo "WARNING: CachyOS kernel COPR not available for Fedora ${FEDORA_VERSION}, using stock kernel"
-fi
+### Kernel CachyOS - DISABLED for bootc builds
+# Custom kernel installation fails in container builds because dracut cannot
+# generate initramfs properly (modules.dep missing, no /dev/log, etc.)
+# 
+# To install CachyOS kernel on the LIVE system after booting, run:
+#   sudo dnf copr enable bieszczaders/kernel-cachyos
+#   sudo rpm-ostree install kernel-cachyos kernel-cachyos-devel-matched
+#   sudo setsebool -P domain_kernel_load_modules on
+#   systemctl reboot
+#
+# The base Fedora COSMIC Atomic image includes a working kernel.
 
 ### Windsurf IDE
 rpm --import https://windsurf-stable.codeiumdata.com/wVxQEIWkwPUEAGf3/yum/RPM-GPG-KEY-windsurf
