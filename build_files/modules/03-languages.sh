@@ -46,10 +46,27 @@ BUN_INSTALL=/usr/local/bun /tmp/bun-install.sh
 rm /tmp/bun-install.sh
 echo "Bun installed: $(/usr/local/bun/bin/bun --version)"
 
+# TEAM_003: Flutter/Dart SDK installation
+subsection "Installing Flutter SDK (includes Dart)"
+FLUTTER_DIR="/usr/share/flutter"
+dnf5 install -y git clang cmake ninja-build gtk3-devel  # Flutter dependencies
+git clone --depth 1 --branch stable https://github.com/flutter/flutter.git "$FLUTTER_DIR"
+git config --system --add safe.directory "$FLUTTER_DIR"
+ln -sf "$FLUTTER_DIR/bin/flutter" /usr/bin/flutter
+ln -sf "$FLUTTER_DIR/bin/dart" /usr/bin/dart
+# Precache binaries during build (filesystem is read-only at runtime)
+export PATH="$FLUTTER_DIR/bin:$PATH"
+flutter precache --linux --web
+flutter config --no-analytics
+dart --disable-analytics
+echo "Flutter installed: $(flutter --version --machine | head -1)"
+
 subsection "Verifying programming languages"
 verify_command python3 "Python" && \
 verify_command uv "uv package manager" && \
 verify_runs "Go version" /usr/local/go/bin/go version && \
 verify_runs "Rust version" /usr/local/cargo/bin/rustc --version && \
 verify_command node "Node.js" && \
-verify_runs "Bun version" /usr/local/bun/bin/bun --version || exit 1
+verify_runs "Bun version" /usr/local/bun/bin/bun --version && \
+verify_command flutter "Flutter SDK" && \
+verify_command dart "Dart SDK" || exit 1

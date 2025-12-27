@@ -4,6 +4,11 @@
 
 section "Part 2: Base Packages"
 
+# TEAM_003: Update all system packages to latest versions
+subsection "Updating system packages"
+dnf5 upgrade --refresh -y
+echo "System packages updated to latest versions"
+
 subsection "Installing basic packages"
 dnf5 install -y tmux mosh
 
