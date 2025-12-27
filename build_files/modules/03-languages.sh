@@ -8,10 +8,7 @@ section "Part 3: Programming Languages"
 subsection "Installing build essentials for language tooling"
 dnf5 install -y gcc gcc-c++ make pkg-config openssl-devel
 
-# TEAM_003: Create /root directory structure for tools that expect HOME=/root
-# Some tools (Flutter, corepack, etc.) need /root to exist
-mkdir -p /root/.cache /root/.local/share
-export HOME=/root
+# HOME=/root is already set in 01-filesystem.sh with full directory structure
 
 subsection "Installing Python + uv package manager"
 dnf5 install -y python3 python3-pip python3-devel
@@ -93,7 +90,8 @@ subsection "Pre-caching Node.js global packages"
 export NPM_CONFIG_CACHE=/usr/share/npm-cache
 export PNPM_HOME=/usr/share/pnpm
 export COREPACK_HOME=/usr/share/corepack
-mkdir -p "$NPM_CONFIG_CACHE" "$PNPM_HOME" "$COREPACK_HOME" /root/.cache/node/corepack
+mkdir -p "$NPM_CONFIG_CACHE" "$PNPM_HOME" "$COREPACK_HOME"
+# /root/.cache/node/corepack already created in 01-filesystem.sh
 export PATH="$PNPM_HOME:$PATH"
 # Install common global packages
 npm install -g typescript ts-node eslint prettier @biomejs/biome turbo nx
