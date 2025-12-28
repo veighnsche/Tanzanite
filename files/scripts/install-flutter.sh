@@ -20,11 +20,20 @@ export PATH="$FLUTTER_DIR/bin:$PATH"
 export HOME=/root
 
 # Fix tar ownership errors - Flutter downloads tarballs with UIDs that don't exist in container
-export TAR_OPTIONS="--no-same-owner"
+# Flutter calls /usr/sbin/tar with absolute path, so we must replace it temporarily
+cp /usr/sbin/tar /usr/sbin/tar.real
+cat > /usr/sbin/tar << 'EOF'
+#!/bin/bash
+exec /usr/sbin/tar.real --no-same-owner "$@"
+EOF
+chmod +x /usr/sbin/tar
 
 # Precache ALL platform binaries during build (filesystem is read-only at runtime)
 echo "Pre-caching Flutter binaries..."
 flutter precache --android --linux --web
+
+# Restore original tar
+mv /usr/sbin/tar.real /usr/sbin/tar
 
 # Disable analytics (Q1 resolution: use --no-analytics and ignore root warning)
 flutter config --no-analytics
