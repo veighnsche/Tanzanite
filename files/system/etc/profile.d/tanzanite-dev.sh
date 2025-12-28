@@ -35,7 +35,7 @@ export ANDROID_HOME=$ANDROID_SDK_ROOT
 export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
 export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
 export PATH=$PATH:$ANDROID_SDK_ROOT/build-tools/35.0.0
-export PATH=$PATH:$ANDROID_SDK_ROOT/ndk/27.2.12479018
+export PATH=$PATH:$ANDROID_SDK_ROOT/ndk/29.0.14206865
 
 # Gradle
 export GRADLE_USER_HOME=/var/cache/gradle

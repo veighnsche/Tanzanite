@@ -4,7 +4,7 @@ set -euo pipefail
 
 echo "=== Installing Go ==="
 
-GO_VERSION="1.25.2"
+GO_VERSION="1.25.5"
 
 echo "Downloading Go ${GO_VERSION}..."
 curl -fSL --connect-timeout 30 --max-time 300 \
