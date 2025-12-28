@@ -19,6 +19,9 @@ export PUB_CACHE=/usr/share/flutter/.pub-cache
 export PATH="$FLUTTER_DIR/bin:$PATH"
 export HOME=/root
 
+# Fix tar ownership errors - Flutter downloads tarballs with UIDs that don't exist in container
+export TAR_OPTIONS="--no-same-owner"
+
 # Precache ALL platform binaries during build (filesystem is read-only at runtime)
 echo "Pre-caching Flutter binaries..."
 flutter precache --android --linux --web
