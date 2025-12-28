@@ -10,7 +10,7 @@ echo "Downloading Node.js ${NODE_VERSION}..."
 curl -fSL --connect-timeout 30 --max-time 300 \
     "https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64.tar.xz" \
     -o /tmp/node.tar.xz
-tar -xJ -C /usr/local --strip-components=1 -f /tmp/node.tar.xz
+tar -xJ -C /usr/local --strip-components=1 --no-same-owner -f /tmp/node.tar.xz
 rm /tmp/node.tar.xz
 
 corepack enable pnpm

@@ -19,6 +19,7 @@ echo "repo tool installed"
 echo "Installing Android SDK Command-line Tools..."
 mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
 
+# Latest as of Dec 2025
 CMDLINE_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip"
 curl -fSL --connect-timeout 30 --max-time 300 "$CMDLINE_TOOLS_URL" -o /tmp/cmdline-tools.zip
 unzip -q /tmp/cmdline-tools.zip -d "$ANDROID_SDK_ROOT/cmdline-tools"

@@ -12,11 +12,19 @@ curl -fSL --connect-timeout 30 --max-time 300 \
     "https://github.com/Genymobile/scrcpy/releases/download/v${SCRCPY_VERSION}/scrcpy-linux-x86_64-v${SCRCPY_VERSION}.tar.gz" \
     -o /tmp/scrcpy.tar.gz
 mkdir -p /opt/scrcpy
-tar -xz -C /opt/scrcpy --strip-components=1 -f /tmp/scrcpy.tar.gz
+tar -xz -C /opt/scrcpy --strip-components=1 --no-same-owner -f /tmp/scrcpy.tar.gz
 rm /tmp/scrcpy.tar.gz
 
-ln -sf /opt/scrcpy/scrcpy /usr/local/bin/scrcpy
-chmod +x /opt/scrcpy/scrcpy /usr/local/bin/scrcpy
+# Find the actual binary (it's inside the extracted folder)
+SCRCPY_BIN="/opt/scrcpy/scrcpy"
+if [[ ! -f "$SCRCPY_BIN" ]]; then
+    echo "ERROR: scrcpy binary not found at $SCRCPY_BIN"
+    ls -R /opt/scrcpy
+    exit 1
+fi
+
+ln -sf "$SCRCPY_BIN" /usr/local/bin/scrcpy
+chmod +x "$SCRCPY_BIN" /usr/local/bin/scrcpy
 echo "scrcpy v${SCRCPY_VERSION} installed to /opt/scrcpy"
 
 # Create desktop entry

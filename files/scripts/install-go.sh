@@ -11,7 +11,7 @@ curl -fSL --connect-timeout 30 --max-time 300 \
     "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz" \
     -o /tmp/go.tar.gz
 rm -rf /usr/local/go
-tar -C /usr/local -xzf /tmp/go.tar.gz
+tar -C /usr/local -xz --no-same-owner -f /tmp/go.tar.gz
 rm /tmp/go.tar.gz
 echo "Go installed: $(/usr/local/go/bin/go version)"
 

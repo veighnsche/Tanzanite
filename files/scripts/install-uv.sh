@@ -9,7 +9,7 @@ echo "Downloading uv..."
 curl -fSL --connect-timeout 30 --max-time 300 \
     "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-unknown-linux-gnu.tar.gz" \
     -o /tmp/uv.tar.gz
-tar -xz -C /usr/local/bin --strip-components=1 -f /tmp/uv.tar.gz
+tar -xz -C /usr/local/bin --strip-components=1 --no-same-owner -f /tmp/uv.tar.gz
 chmod +x /usr/local/bin/uv /usr/local/bin/uvx
 rm /tmp/uv.tar.gz
 echo "uv installed: $(uv --version)"

@@ -12,3 +12,9 @@ Fix the error where `cargo install watchexec` fails because the binary has moved
     - Removed deprecated `npm_config_tmp`.
     - Used `corepack` to update `pnpm` instead of `npm install -g` to avoid `EEXIST` conflicts.
     - Added `--force` to global npm installs for better build resilience.
+- [x] Fix `scrcpy` installation:
+    - Added `--no-same-owner` to `tar` extraction.
+    - Added validation to ensure the binary is correctly located in `/opt/scrcpy/scrcpy`.
+- [x] Proactive Fixes:
+    - Applied `--no-same-owner` to all `tar` extractions (`uv`, `node`, `go`, `scrcpy`) to prevent "owner not found" errors in container builds.
+    - Verified and updated Android `cmdline-tools` URL to a known stable version.
