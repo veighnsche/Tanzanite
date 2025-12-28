@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 name: tanzanite-aurora
 description: Aurora (uBlue) with developer tooling
-base-image: ghcr.io/ublue-os/aurora
+base-image: ghcr.io/ublue-os/aurora-dx
 image-version: stable
 
 modules:
