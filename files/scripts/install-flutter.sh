@@ -59,7 +59,7 @@ dart --disable-analytics
 
 # Note: devtools is bundled with Flutter 3.x, no need to install separately
 # dart_style is also included in the Dart SDK
-export PUB_CACHE=/usr/share/pub-cache
+export PUB_CACHE=/var/cache/pub-cache
 mkdir -p "$PUB_CACHE"
 
 chmod -R a+rX "$PUB_CACHE" "$FLUTTER_DIR"

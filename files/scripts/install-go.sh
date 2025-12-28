@@ -17,9 +17,9 @@ echo "Go installed: $(/usr/local/go/bin/go version)"
 
 # Pre-cache Go modules and tools
 echo "Pre-caching Go tools..."
-export GOPATH=/usr/share/go
-export GOMODCACHE=/usr/share/go/pkg/mod
-export GOCACHE=/usr/share/go/cache
+export GOPATH=/var/cache/go
+export GOMODCACHE=/var/cache/go/pkg/mod
+export GOCACHE=/var/cache/go/cache
 mkdir -p "$GOPATH" "$GOMODCACHE" "$GOCACHE"
 export PATH="/usr/local/go/bin:$GOPATH/bin:$PATH"
 

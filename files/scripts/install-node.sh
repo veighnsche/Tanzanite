@@ -18,11 +18,15 @@ echo "Node.js installed: $(node --version)"
 
 # Pre-cache Node.js packages
 echo "Pre-caching Node.js packages..."
-export NPM_CONFIG_CACHE=/usr/share/npm-cache
-export PNPM_HOME=/usr/share/pnpm
-export COREPACK_HOME=/usr/share/corepack
+export NPM_CONFIG_CACHE=/var/cache/npm-cache
+export PNPM_HOME=/var/cache/pnpm
+export COREPACK_HOME=/var/cache/corepack
 mkdir -p "$NPM_CONFIG_CACHE" "$PNPM_HOME" "$COREPACK_HOME"
 export PATH="$PNPM_HOME:$PATH"
+
+# Ensure we have a writable location for npm temp files during build
+export npm_config_tmp=/tmp/npm-tmp
+mkdir -p "$npm_config_tmp"
 
 npm install -g typescript ts-node eslint prettier @biomejs/biome turbo nx
 

@@ -15,7 +15,7 @@ echo "Bun installed: $(/usr/local/bun/bin/bun --version)"
 
 # Pre-cache Bun
 echo "Setting up Bun cache..."
-export BUN_INSTALL_CACHE_DIR=/usr/share/bun-cache
+export BUN_INSTALL_CACHE_DIR=/var/cache/bun-cache
 mkdir -p "$BUN_INSTALL_CACHE_DIR"
 export PATH="/usr/local/bun/bin:$PATH"
 

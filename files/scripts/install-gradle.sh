@@ -17,7 +17,7 @@ echo "Gradle installed: $(gradle --version | head -3)"
 
 # Pre-download common Gradle wrapper versions
 echo "Pre-caching Gradle wrapper distributions..."
-GRADLE_USER_HOME="/usr/share/gradle"
+export GRADLE_USER_HOME="/var/cache/gradle"
 mkdir -p "$GRADLE_USER_HOME/wrapper/dists"
 
 for WRAPPER_VER in "8.12" "8.11.1" "8.10.2" "8.9"; do

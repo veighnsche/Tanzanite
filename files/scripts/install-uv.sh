@@ -16,8 +16,8 @@ echo "uv installed: $(uv --version)"
 
 # Pre-cache common Python tools
 echo "Pre-caching Python tools..."
-export UV_CACHE_DIR=/usr/share/uv-cache
-export UV_TOOL_DIR=/usr/share/uv-tools
+export UV_CACHE_DIR=/var/cache/uv-cache
+export UV_TOOL_DIR=/var/cache/uv-tools
 export UV_TOOL_BIN_DIR=/usr/local/bin
 mkdir -p "$UV_CACHE_DIR" "$UV_TOOL_DIR"
 
