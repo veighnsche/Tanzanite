@@ -29,7 +29,7 @@ rustup component add rust-analyzer rustfmt clippy rust-src
 
 echo "Installing cargo tools..."
 # bacon and watchexec are the modern successors to cargo-watch (which is dormant)
-cargo install bacon watchexec cargo-watch cargo-edit cargo-expand sccache
+cargo install bacon watchexec-cli cargo-watch cargo-edit cargo-expand sccache
 
 chmod -R a+rX /usr/local/rustup /usr/local/cargo
 echo "Rust cache: $CARGO_HOME"
