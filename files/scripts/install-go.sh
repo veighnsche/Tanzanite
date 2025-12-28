@@ -4,7 +4,7 @@ set -euo pipefail
 
 echo "=== Installing Go ==="
 
-GO_VERSION="1.23.5"
+GO_VERSION="1.25.2"
 
 echo "Downloading Go ${GO_VERSION}..."
 curl -fSL --connect-timeout 30 --max-time 300 \
@@ -23,6 +23,7 @@ export GOCACHE=/var/cache/go/cache
 mkdir -p "$GOPATH" "$GOMODCACHE" "$GOCACHE"
 export PATH="/usr/local/go/bin:$GOPATH/bin:$PATH"
 
+echo "Installing Go tools at @latest..."
 /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
 /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
 /usr/local/go/bin/go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest

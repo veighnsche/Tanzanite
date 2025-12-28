@@ -4,7 +4,7 @@ set -euo pipefail
 
 echo "=== Installing Node.js ==="
 
-NODE_VERSION="v24.1.0"
+NODE_VERSION="v24.12.0"
 
 echo "Downloading Node.js ${NODE_VERSION}..."
 curl -fSL --connect-timeout 30 --max-time 300 \
@@ -28,7 +28,12 @@ export PATH="$PNPM_HOME:$PATH"
 export npm_config_tmp=/tmp/npm-tmp
 mkdir -p "$npm_config_tmp"
 
-npm install -g typescript ts-node eslint prettier @biomejs/biome turbo nx
+# Update npm and pnpm to latest
+echo "Updating npm and pnpm..."
+npm install -g npm@latest pnpm@latest
+
+echo "Installing global Node.js tools..."
+npm install -g typescript@latest ts-node@latest eslint@latest prettier@latest @biomejs/biome@latest turbo@latest nx@latest
 
 # Verify pnpm works
 pnpm --version

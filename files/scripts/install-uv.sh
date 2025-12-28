@@ -21,11 +21,15 @@ export UV_TOOL_DIR=/var/cache/uv-tools
 export UV_TOOL_BIN_DIR=/usr/local/bin
 mkdir -p "$UV_CACHE_DIR" "$UV_TOOL_DIR"
 
-uv tool install ruff
-uv tool install black
-uv tool install mypy
-uv tool install pytest
-uv tool install ipython
+# Ensure pip is latest
+python3 -m pip install --upgrade pip setuptools wheel
+
+# Use uv to install latest versions of tools
+uv tool install ruff@latest
+uv tool install black@latest
+uv tool install mypy@latest
+uv tool install pytest@latest
+uv tool install ipython@latest
 
 chmod -R a+rX "$UV_CACHE_DIR" "$UV_TOOL_DIR"
 echo "Python/uv cache: $UV_CACHE_DIR"

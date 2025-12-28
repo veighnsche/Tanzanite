@@ -19,7 +19,7 @@ echo "repo tool installed"
 echo "Installing Android SDK Command-line Tools..."
 mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
 
-CMDLINE_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip"
+CMDLINE_TOOLS_URL="https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip"
 curl -fSL --connect-timeout 30 --max-time 300 "$CMDLINE_TOOLS_URL" -o /tmp/cmdline-tools.zip
 unzip -q /tmp/cmdline-tools.zip -d "$ANDROID_SDK_ROOT/cmdline-tools"
 mv "$ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools" "$ANDROID_SDK_ROOT/cmdline-tools/latest"
@@ -36,7 +36,7 @@ echo "Installing Android SDK components..."
     "platform-tools" \
     "build-tools;35.0.0" \
     "platforms;android-35" \
-    "ndk;27.2.12479018" \
+    "ndk;29.0.14206865" \
     "cmake;3.22.1"
 
 chmod -R a+rX "$ANDROID_SDK_ROOT"
@@ -44,7 +44,7 @@ echo "Android SDK components installed:"
 echo "  - platform-tools (adb, fastboot)"
 echo "  - build-tools;35.0.0"
 echo "  - platforms;android-35"
-echo "  - ndk;27.2.12479018"
+echo "  - ndk;29.0.14206865"
 echo "  - cmake;3.22.1"
 
 echo "=== Android SDK Complete ==="

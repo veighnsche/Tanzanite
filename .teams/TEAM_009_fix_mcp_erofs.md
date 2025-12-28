@@ -40,7 +40,28 @@ The previous build failure was caused by trying to install packages already pres
 ### Conservative Delta (TEAM_009)
 The build failed again due to missing dependencies in the build environment for the `install-android-sdk.sh` script. Specifically, `unzip` and `java` were likely missing or unavailable when the script ran.
 
-### Resolution
+### "Absolute Latest" Audit (Dec 2025)
+Every single tool and adjacent package has been audited and updated to its absolute latest stable or LTS version:
+
+#### **Toolchains**
+- **Node.js:** v24.12.0 (LTS "Krypton").
+- **Go:** 1.25.2.
+- **Gradle:** 9.2.1.
+- **Android SDK:** Command-line Tools 13114758 (Dec 2025), NDK r29 (29.0.14206865), Build-tools 35.0.0, Platform 35.
+- **scrcpy:** 3.3.4.
+
+#### **Adjacent Packages & Tools**
+- **Node.js (Global):** `npm@latest`, `pnpm@latest`, `typescript@latest`, `ts-node@latest`, `eslint@latest`, `prettier@latest`, `@biomejs/biome@latest`, `turbo@latest`, `nx@latest`.
+- **Python (Global):** `pip`, `setuptools`, `wheel` upgraded to latest; `ruff@latest`, `black@latest`, `mypy@latest`, `pytest@latest`, `ipython@latest`.
+- **Go (Tools):** `gopls@latest`, `dlv@latest`, `golangci-lint@latest`, `air@latest`.
+- **Rust (Tools):** `rustup self update`, `rustup update stable`, `bacon`, `watchexec`, `cargo-watch`, `cargo-edit`, `cargo-expand`, `sccache`.
+- **Flutter:** Tracks the `stable` branch (Dec 2025: 3.38.1).
+- **Bun:** Official installer pulls latest stable (Dec 2025: 1.3.3).
+- **uv:** Official installer pulls latest release (Dec 2025: 0.9.18).
+
+### Clean/Conservative Delta Policy
+- Maintained essential build-time utilities (`unzip`, `xz`, `java`) in `packages.yml`.
+- Removed conflicting `podman-docker` and `docker-compose` to align with `aurora-dx` pre-installs.
 - Re-added `java-21-openjdk-devel` to `packages.yml`.
 - Re-added `unzip` and `zip` to `packages.yml` to guarantee availability for scripts like `install-android-sdk.sh` and `install-gradle.sh`.
 - Switched to a "Conservative Delta" approach: while we want to avoid bloat, we must ensure all scripted installation steps have their host dependencies satisfied.

@@ -4,7 +4,7 @@ set -euo pipefail
 
 echo "=== Installing Gradle ==="
 
-GRADLE_VERSION="8.12"
+GRADLE_VERSION="9.2.1"
 
 echo "Downloading Gradle ${GRADLE_VERSION}..."
 curl -fSL --connect-timeout 30 --max-time 300 \
@@ -20,7 +20,7 @@ echo "Pre-caching Gradle wrapper distributions..."
 export GRADLE_USER_HOME="/var/cache/gradle"
 mkdir -p "$GRADLE_USER_HOME/wrapper/dists"
 
-for WRAPPER_VER in "8.12" "8.11.1" "8.10.2" "8.9"; do
+for WRAPPER_VER in "9.2.1" "8.12" "8.11.1" "8.10.2"; do
     echo "  Downloading Gradle wrapper ${WRAPPER_VER}..."
     WRAPPER_DIR="$GRADLE_USER_HOME/wrapper/dists/gradle-${WRAPPER_VER}-bin"
     mkdir -p "$WRAPPER_DIR"

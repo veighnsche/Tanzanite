@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # TEAM_006: Install Flutter SDK
 # Note: Flutter warns about running as root, but this is expected in container builds
+# We set BOT=true to suppress these warnings and signal CI environment
+export BOT=true
 set -euo pipefail
 
 echo "=== Installing Flutter ==="
@@ -15,7 +17,8 @@ ln -sf "$FLUTTER_DIR/bin/flutter" /usr/bin/flutter
 ln -sf "$FLUTTER_DIR/bin/dart" /usr/bin/dart
 
 # Set pub cache location
-export PUB_CACHE=/usr/share/flutter/.pub-cache
+export PUB_CACHE=/var/cache/pub-cache
+mkdir -p "$PUB_CACHE"
 export PATH="$FLUTTER_DIR/bin:$PATH"
 export HOME=/root
 
@@ -59,8 +62,6 @@ dart --disable-analytics
 
 # Note: devtools is bundled with Flutter 3.x, no need to install separately
 # dart_style is also included in the Dart SDK
-export PUB_CACHE=/var/cache/pub-cache
-mkdir -p "$PUB_CACHE"
 
 chmod -R a+rX "$PUB_CACHE" "$FLUTTER_DIR"
 echo "Pub cache: $PUB_CACHE"
