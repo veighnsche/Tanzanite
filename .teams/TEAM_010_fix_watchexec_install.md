@@ -7,3 +7,8 @@ Fix the error where `cargo install watchexec` fails because the binary has moved
 - [x] Identified the cause: `watchexec` crate version 8+ is a library, binary is in `watchexec-cli`.
 - [x] Update `install-rust.sh` to use `watchexec-cli`.
 - [x] Verify if other tools need updates.
+- [x] Suppress `pip` root user warning in `install-uv.sh` using `--root-user-action=ignore`.
+- [x] Fix Node.js build failure:
+    - Removed deprecated `npm_config_tmp`.
+    - Used `corepack` to update `pnpm` instead of `npm install -g` to avoid `EEXIST` conflicts.
+    - Added `--force` to global npm installs for better build resilience.

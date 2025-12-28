@@ -24,16 +24,13 @@ export COREPACK_HOME=/var/cache/corepack
 mkdir -p "$NPM_CONFIG_CACHE" "$PNPM_HOME" "$COREPACK_HOME"
 export PATH="$PNPM_HOME:$PATH"
 
-# Ensure we have a writable location for npm temp files during build
-export npm_config_tmp=/tmp/npm-tmp
-mkdir -p "$npm_config_tmp"
-
 # Update npm and pnpm to latest
 echo "Updating npm and pnpm..."
-npm install -g npm@latest pnpm@latest
+npm install -g --force npm@latest
+corepack prepare pnpm@latest --activate
 
 echo "Installing global Node.js tools..."
-npm install -g typescript@latest ts-node@latest eslint@latest prettier@latest @biomejs/biome@latest turbo@latest nx@latest
+npm install -g --force typescript@latest ts-node@latest eslint@latest prettier@latest @biomejs/biome@latest turbo@latest nx@latest
 
 # Verify pnpm works
 pnpm --version

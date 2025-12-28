@@ -22,7 +22,7 @@ export UV_TOOL_BIN_DIR=/usr/local/bin
 mkdir -p "$UV_CACHE_DIR" "$UV_TOOL_DIR"
 
 # Ensure pip is latest
-python3 -m pip install --upgrade pip setuptools wheel
+python3 -m pip install --upgrade --root-user-action=ignore pip setuptools wheel
 
 # Use uv to install latest versions of tools
 uv tool install ruff@latest
