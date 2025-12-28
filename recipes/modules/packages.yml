@@ -1,58 +1,29 @@
-# TEAM_006: Base packages via dnf module
-# Complete package list extracted from all current build modules
+# TEAM_009: Tanzanite-specific package additions over aurora-dx
+# aurora-dx already includes: git, podman, buildah, skopeo, tmux, curl, wget, unzip, zip,
+# as well as basic development tools (gcc, make) and performance tools.
 type: dnf
 install:
   packages:
-    # Base development (from 03-languages.sh, 04-devtools.sh)
-    - gcc
-    - gcc-c++
-    - make
-    - pkg-config
-    - openssl-devel
-    - automake
-    - autoconf
-    - libtool
-    - flex
-    - bison
-    - patch
-    
-    # Build tools
-    - git
+    # Build tools not guaranteed in aurora-dx
     - clang
     - cmake
     - ninja-build
     
-    # Python
-    - python3
-    - python3-pip
+    # Python development
     - python3-devel
     
-    # Flutter dependencies
+    # Flutter & Desktop development dependencies
     - gtk3-devel
     
-    # Containers
-    - podman
-    - podman-docker
-    - buildah
-    - skopeo
-    - docker-compose
-    
-    # Utilities
-    - tmux
-    - mosh
-    - curl
-    - wget
-    - unzip
-    - zip
-    
-    # AOSP build dependencies (from 04-devtools.sh)
+    # AOSP & low-level build dependencies (likely missing from DX base)
     - zlib-devel
     - glibc-devel.i686
     - libstdc++-devel.i686
-    - zlib-ng-compat-devel.i686
     - xorg-x11-proto-devel
     - libX11-devel
     - mesa-libGL-devel
     - ncurses-devel
     - readline-devel
-    - java-21-openjdk-devel
+
+    # Additional utilities
+    - mosh

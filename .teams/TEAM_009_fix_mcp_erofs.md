@@ -22,4 +22,23 @@ The project currently defines global environment variables in `/etc/profile.d/ta
 - [x] Create `systemd-tmpfiles` configuration for `/var/cache` directories.
 - [x] Update `tanzanite-dev.sh` to use writable paths.
 - [x] Update installation scripts (`install-node.sh`, `install-uv.sh`, etc.) to use writable paths.
-- [ ] Verify build process (install scripts) still works with these changes.
+## Aurora-DX Base Image Alignment (TEAM_009)
+Investigated overlap between `aurora-dx` and Tanzanite.
+
+### Findings
+- **Base Packages:** `aurora-dx` already includes `git`, `podman`, `buildah`, `skopeo`, `tmux`, `curl`, `wget`, `unzip`, `zip`, `gcc`, `make`, and `just`.
+- **IDEs:** `aurora-dx` includes VS Code. Tanzanite adds Windsurf. This is acceptable as Windsurf is a core requirement.
+- **Containers:** `aurora-dx` defaults to Docker/VS Code integration but includes Podman. Tanzanite's specific `podman-docker` and `docker-compose` additions are kept where not clearly redundant.
+- **Filesystem:** The `/opt` and `/usr/local` fixes in `00-filesystem.sh` remain critical for BlueBuild compatibility with certain base image versions.
+
+### Conflict Resolution (TEAM_009)
+The previous build failure was caused by trying to install packages already present or managed differently in the `aurora-dx` base:
+- **Docker/Podman Conflict:** `podman-docker` from Fedora was conflicting with `docker-ce` pre-installed in `aurora-dx`.
+- **Compose Conflict:** `docker-compose` was conflicting with `docker-compose-plugin`.
+- **Dependency Redundancy:** `zlib-ng-compat-devel.i686` was already present in the base image.
+
+### Resolution
+- Removed `podman-docker` and `docker-compose` from `packages.yml`.
+- Removed `zlib-ng-compat-devel.i686`.
+- Removed `java-21-openjdk-devel` (base image already provides sufficient JDK support).
+- Transitioned to a "Strict Delta" approach where we only add packages that are uniquely required by Tanzanite workflows.
