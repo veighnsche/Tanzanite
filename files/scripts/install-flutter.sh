@@ -57,12 +57,10 @@ _restore_tar /usr/bin/tar
 flutter config --no-analytics
 dart --disable-analytics
 
-# Pre-cache Dart pub global packages
-echo "Pre-caching Dart pub packages..."
+# Note: devtools is bundled with Flutter 3.x, no need to install separately
+# dart_style is also included in the Dart SDK
 export PUB_CACHE=/usr/share/pub-cache
 mkdir -p "$PUB_CACHE"
-dart pub global activate devtools
-dart pub global activate dart_style
 
 chmod -R a+rX "$PUB_CACHE" "$FLUTTER_DIR"
 echo "Pub cache: $PUB_CACHE"
