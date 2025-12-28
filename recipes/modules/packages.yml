@@ -25,5 +25,13 @@ install:
     - ncurses-devel
     - readline-devel
 
+    # Java Development (Needed for Android SDK & Gradle)
+    - java-21-openjdk-devel
+
+    # Essential Build Utilities (Ensure availability for install scripts)
+    - unzip
+    - zip
+    - xz
+
     # Additional utilities
     - mosh

@@ -37,8 +37,10 @@ The previous build failure was caused by trying to install packages already pres
 - **Compose Conflict:** `docker-compose` was conflicting with `docker-compose-plugin`.
 - **Dependency Redundancy:** `zlib-ng-compat-devel.i686` was already present in the base image.
 
+### Conservative Delta (TEAM_009)
+The build failed again due to missing dependencies in the build environment for the `install-android-sdk.sh` script. Specifically, `unzip` and `java` were likely missing or unavailable when the script ran.
+
 ### Resolution
-- Removed `podman-docker` and `docker-compose` from `packages.yml`.
-- Removed `zlib-ng-compat-devel.i686`.
-- Removed `java-21-openjdk-devel` (base image already provides sufficient JDK support).
-- Transitioned to a "Strict Delta" approach where we only add packages that are uniquely required by Tanzanite workflows.
+- Re-added `java-21-openjdk-devel` to `packages.yml`.
+- Re-added `unzip` and `zip` to `packages.yml` to guarantee availability for scripts like `install-android-sdk.sh` and `install-gradle.sh`.
+- Switched to a "Conservative Delta" approach: while we want to avoid bloat, we must ensure all scripted installation steps have their host dependencies satisfied.
