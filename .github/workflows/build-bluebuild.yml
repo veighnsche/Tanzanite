@@ -1,0 +1,43 @@
+# TEAM_006: BlueBuild GitHub Actions workflow
+name: Build BlueBuild Image
+
+on:
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '05 10 * * *'  # 10:05am UTC everyday
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/README.md'
+      - '.plans/**'
+      - '.teams/**'
+      - '.questions/**'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  build-aurora:
+    name: Build Aurora
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Maximize build space
+        uses: ublue-os/remove-unwanted-software@v7
+
+      - uses: blue-build/github-action@v1
+        with:
+          recipe: recipe-aurora.yml
+          cosign_private_key: ${{ secrets.SIGNING_SECRET }}
+          registry_token: ${{ github.token }}
+          pr_event_number: ${{ github.event.number }}
+          use_cache: true
+

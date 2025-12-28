@@ -1,0 +1,16 @@
+# TEAM_006: Tanzanite Aurora variant
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+name: tanzanite-aurora
+description: Aurora (uBlue) with developer tooling
+base-image: ghcr.io/ublue-os/aurora
+image-version: stable
+
+modules:
+  - from-file: modules/filesystem.yml    # MUST BE FIRST - fixes symlinks
+  - from-file: modules/packages.yml
+  - from-file: modules/languages.yml
+  - from-file: modules/devtools.yml
+  - from-file: modules/android.yml
+  - from-file: modules/environment.yml
+  - from-file: modules/system.yml
+  - from-file: modules/finalize.yml      # MUST BE LAST - dnf update + cleanup

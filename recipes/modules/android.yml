@@ -1,0 +1,5 @@
+# TEAM_006: Android development tools
+type: script
+scripts:
+  - install-android-sdk.sh
+  - install-scrcpy.sh

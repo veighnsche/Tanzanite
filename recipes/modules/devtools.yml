@@ -1,0 +1,5 @@
+# TEAM_006: Development tools (Gradle, Windsurf)
+type: script
+scripts:
+  - install-gradle.sh
+  - install-windsurf.sh

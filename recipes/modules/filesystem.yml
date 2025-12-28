@@ -1,0 +1,6 @@
+# TEAM_006: Filesystem setup module
+# CRITICAL: This module MUST run FIRST before any package installation
+# Converts /root, /opt, /usr/local from symlinks to real directories
+type: script
+scripts:
+  - 00-filesystem.sh

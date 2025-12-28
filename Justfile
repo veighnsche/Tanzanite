@@ -90,7 +90,6 @@ sudoif command *args:
 #
 
 # Build the image using the specified parameters
-# Example: just build tanzanite-cosmic latest cosmic quay.io/fedora-ostree-desktops/cosmic-atomic:43
 # Example: just build tanzanite-aurora latest aurora ghcr.io/ublue-os/aurora:stable
 build $target_image=image_name $tag=default_tag $base_name=default_base_name $base_image=default_base_image:
     #!/usr/bin/env bash
@@ -109,11 +108,6 @@ build $target_image=image_name $tag=default_tag $base_name=default_base_name $ba
         --tag "${target_image}:${tag}" \
         .
 
-# Build cosmic variant (default)
-[group('Build Variants')]
-build-cosmic $tag=default_tag:
-    just build "{{image_name}}-cosmic" "{{tag}}" cosmic "quay.io/fedora-ostree-desktops/cosmic-atomic:43"
-
 # Build aurora variant
 [group('Build Variants')]
 build-aurora $tag=default_tag:
@@ -127,7 +121,6 @@ build-bluefin $tag=default_tag:
 # Build all variants
 [group('Build Variants')]
 build-all $tag=default_tag:
-    just build-cosmic "{{tag}}"
     just build-aurora "{{tag}}"
 
 # Command: _rootful_load_image

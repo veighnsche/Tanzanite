@@ -1,0 +1,4 @@
+# TEAM_006: System configuration (hostname, services)
+type: script
+scripts:
+  - setup-system.sh

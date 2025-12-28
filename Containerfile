@@ -1,6 +1,5 @@
 # Base Image - configurable via build arg (must be before any FROM)
 # Supported bases:
-#   - cosmic: quay.io/fedora-ostree-desktops/cosmic-atomic:43
 #   - aurora: ghcr.io/ublue-os/aurora:stable
 #   - bluefin: ghcr.io/ublue-os/bluefin:stable
 #   - bazzite: ghcr.io/ublue-os/bazzite:stable

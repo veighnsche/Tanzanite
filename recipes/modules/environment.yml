@@ -1,0 +1,10 @@
+# TEAM_006: Environment configuration
+# Copies tanzanite-dev.sh to /etc/profile.d/
+# BlueBuild makes files/ available at /tmp/files/ during build
+type: script
+snippets:
+  - |
+    echo "Installing environment configuration..."
+    cp /tmp/files/system/etc/profile.d/tanzanite-dev.sh /etc/profile.d/tanzanite-dev.sh
+    chmod +x /etc/profile.d/tanzanite-dev.sh
+    echo "Environment variables configured in /etc/profile.d/tanzanite-dev.sh"

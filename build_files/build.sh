@@ -10,8 +10,8 @@ set -ouex pipefail
 # Guard variable - modules check this to ensure they're sourced properly
 export TANZANITE_BUILD=1
 
-# BASE_NAME is passed from Containerfile (cosmic, aurora, bluefin, bazzite)
-export BASE_NAME="${BASE_NAME:-cosmic}"
+# BASE_NAME is passed from Containerfile (aurora, bluefin, bazzite)
+export BASE_NAME="${BASE_NAME:-aurora}"
 
 # Get the directory where this script lives
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

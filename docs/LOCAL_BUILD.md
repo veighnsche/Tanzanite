@@ -47,9 +47,6 @@ cd /path/to/Tanzanite
 
 # Build Aurora variant
 just build tanzanite-aurora latest
-
-# Or build Cosmic variant
-just build tanzanite-cosmic latest
 ```
 
 ### Manual Build Command
@@ -61,14 +58,6 @@ podman build \
   --build-arg BASE_IMAGE=ghcr.io/ublue-os/aurora:stable \
   --build-arg BASE_NAME=aurora \
   -t tanzanite-aurora:latest \
-  .
-
-# Cosmic
-podman build \
-  --platform linux/amd64 \
-  --build-arg BASE_IMAGE=quay.io/fedora-ostree-desktops/cosmic-atomic:43 \
-  --build-arg BASE_NAME=cosmic \
-  -t tanzanite-cosmic:latest \
   .
 ```
 
@@ -163,11 +152,14 @@ case "$BASE_NAME" in
   aurora)
     BASE_IMAGE="ghcr.io/ublue-os/aurora:stable"
     ;;
-  cosmic)
-    BASE_IMAGE="quay.io/fedora-ostree-desktops/cosmic-atomic:43"
+  bluefin)
+    BASE_IMAGE="ghcr.io/ublue-os/bluefin:stable"
+    ;;
+  bazzite)
+    BASE_IMAGE="ghcr.io/ublue-os/bazzite:stable"
     ;;
   *)
-    echo "Unknown base: $BASE_NAME"
+    echo "Unknown base: $BASE_NAME (supported: aurora, bluefin, bazzite)"
     exit 1
     ;;
 esac

@@ -1,0 +1,5 @@
+# TEAM_006: Final system update and cleanup
+# This module MUST run LAST
+type: script
+scripts:
+  - 99-finalize.sh

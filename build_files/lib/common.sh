@@ -84,9 +84,9 @@ is_ublue() {
     [[ "$BASE_NAME" == "aurora" || "$BASE_NAME" == "bluefin" || "$BASE_NAME" == "bazzite" ]]
 }
 
-# Check if we're on vanilla Fedora Atomic
+# Check if we're on vanilla Fedora Atomic (currently unused - no vanilla Fedora bases supported)
 is_fedora_atomic() {
-    [[ "$BASE_NAME" == "cosmic" ]]
+    false
 }
 
 #-------------------------------------------------------------------------------

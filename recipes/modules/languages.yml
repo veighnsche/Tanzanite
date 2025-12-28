@@ -1,0 +1,10 @@
+# TEAM_006: Programming languages installation
+# Each script installs a language toolchain and pre-caches common tools
+type: script
+scripts:
+  - install-uv.sh
+  - install-go.sh
+  - install-rust.sh
+  - install-node.sh
+  - install-bun.sh
+  - install-flutter.sh
