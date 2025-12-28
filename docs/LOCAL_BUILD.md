@@ -1,64 +1,56 @@
-# Local Build Instructions for MacBook M4
-
-Your M4 MacBook can build these images **much faster** than GitHub Actions runners (which are 2-4 vCPU Ubuntu VMs). However, there's a catch: you're building x86_64 Linux images on ARM64 macOS, so you need emulation.
+# Local Build Instructions
 
 ## Prerequisites
 
-### 1. Install Podman Desktop (Recommended)
+### Install BlueBuild CLI
 
 ```bash
+cargo install blue-build
+```
+
+Or use the container-based build (no installation needed).
+
+### For macOS (M1/M2/M3/M4)
+
+Your Mac can build these images but needs x86_64 emulation:
+
+```bash
+# Install Podman
 brew install podman-desktop
-```
 
-Or install just the CLI:
-
-```bash
-brew install podman
-```
-
-### 2. Initialize Podman Machine
-
-Create a Podman machine with enough resources:
-
-```bash
-# Create a machine with 8 CPUs, 16GB RAM, 100GB disk
+# Create a machine with enough resources
 podman machine init --cpus 8 --memory 16384 --disk-size 100
-
-# Start the machine
 podman machine start
-```
 
-### 3. Enable x86_64 Emulation (QEMU)
-
-Your M4 is ARM64, but the images are x86_64. Podman handles this via QEMU:
-
-```bash
-# The Podman machine should auto-configure this, but verify:
+# Verify x86_64 emulation works
 podman run --rm --platform linux/amd64 alpine uname -m
 # Should output: x86_64
 ```
 
 ## Building the Image
 
-### Quick Build (Single Variant)
+### Using BlueBuild (Recommended)
 
 ```bash
 cd /path/to/Tanzanite
 
 # Build Aurora variant
-just build tanzanite-aurora latest
+bluebuild build recipes/recipe-aurora.yml
+
+# Or use just
+just build-aurora
 ```
 
-### Manual Build Command
+### Using Podman Directly
+
+BlueBuild can generate a Containerfile:
 
 ```bash
-# Aurora
-podman build \
-  --platform linux/amd64 \
-  --build-arg BASE_IMAGE=ghcr.io/ublue-os/aurora:stable \
-  --build-arg BASE_NAME=aurora \
-  -t tanzanite-aurora:latest \
-  .
+# Generate Containerfile from recipe
+bluebuild generate recipes/recipe-aurora.yml
+
+# Build with podman
+podman build --platform linux/amd64 -t tanzanite-aurora:latest .
 ```
 
 ## Speed Comparison
@@ -137,47 +129,8 @@ Always specify `--platform linux/amd64`:
 podman build --platform linux/amd64 ...
 ```
 
-## Automated Local Build Script
+## Resources
 
-Create `build-local.sh` in the repo root:
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-BASE_NAME="${1:-aurora}"
-TAG="${2:-latest}"
-
-case "$BASE_NAME" in
-  aurora)
-    BASE_IMAGE="ghcr.io/ublue-os/aurora:stable"
-    ;;
-  bluefin)
-    BASE_IMAGE="ghcr.io/ublue-os/bluefin:stable"
-    ;;
-  bazzite)
-    BASE_IMAGE="ghcr.io/ublue-os/bazzite:stable"
-    ;;
-  *)
-    echo "Unknown base: $BASE_NAME (supported: aurora, bluefin, bazzite)"
-    exit 1
-    ;;
-esac
-
-echo "Building tanzanite-$BASE_NAME:$TAG..."
-podman build \
-  --platform linux/amd64 \
-  --build-arg BASE_IMAGE="$BASE_IMAGE" \
-  --build-arg BASE_NAME="$BASE_NAME" \
-  -t "tanzanite-$BASE_NAME:$TAG" \
-  .
-
-echo "Done! Image: tanzanite-$BASE_NAME:$TAG"
-```
-
-Make it executable:
-
-```bash
-chmod +x build-local.sh
-./build-local.sh aurora latest
-```
+- [BlueBuild Documentation](https://blue-build.org/)
+- [BlueBuild Recipe Reference](https://blue-build.org/reference/recipe/)
+- [BlueBuild Module Reference](https://blue-build.org/reference/module/)

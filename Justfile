@@ -72,54 +72,28 @@ sudoif command *args:
     }
     sudoif {{ command }} {{ args }}
 
-# This Justfile recipe builds a container image using Podman.
-#
-# Arguments:
-#   $target_image - The tag you want to apply to the image (default: $image_name).
-#   $tag - The tag for the image (default: $default_tag).
-#
-# The script constructs the version string using the tag and the current date.
-# If the git working directory is clean, it also includes the short SHA of the current HEAD.
-#
-# just build $target_image $tag
-#
-# Example usage:
-#   just build aurora lts
-#
-# This will build an image 'aurora:lts' with DX and GDX enabled.
-#
-
-# Build the image using the specified parameters
-# Example: just build tanzanite-aurora latest aurora ghcr.io/ublue-os/aurora:stable
-build $target_image=image_name $tag=default_tag $base_name=default_base_name $base_image=default_base_image:
-    #!/usr/bin/env bash
-
-    BUILD_ARGS=()
-    BUILD_ARGS+=("--build-arg" "BASE_IMAGE=${base_image}")
-    BUILD_ARGS+=("--build-arg" "BASE_NAME=${base_name}")
-    if [[ -z "$(git status -s)" ]]; then
-        BUILD_ARGS+=("--build-arg" "SHA_HEAD_SHORT=$(git rev-parse --short HEAD)")
-    fi
-
-    echo "Building ${target_image}:${tag} from base: ${base_name} (${base_image})"
-    podman build \
-        "${BUILD_ARGS[@]}" \
-        --pull=newer \
-        --tag "${target_image}:${tag}" \
-        .
-
-# Build aurora variant
-[group('Build Variants')]
+# Build aurora variant using BlueBuild
+[group('Build')]
 build-aurora $tag=default_tag:
-    just build "{{image_name}}-aurora" "{{tag}}" aurora "ghcr.io/ublue-os/aurora:stable"
-
-# Build bluefin variant
-[group('Build Variants')]
-build-bluefin $tag=default_tag:
-    just build "{{image_name}}-bluefin" "{{tag}}" bluefin "ghcr.io/ublue-os/bluefin:stable"
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "Building tanzanite-aurora using BlueBuild..."
+    
+    # Check if bluebuild is installed
+    if ! command -v bluebuild &> /dev/null; then
+        echo "BlueBuild not found. Install with: cargo install blue-build"
+        echo "Falling back to podman build with generated Containerfile..."
+        bluebuild generate recipes/recipe-aurora.yml
+        podman build --pull=newer --tag "{{image_name}}-aurora:${tag}" .
+    else
+        bluebuild build --push=false recipes/recipe-aurora.yml
+        # Tag with requested tag
+        podman tag "tanzanite-aurora:latest" "{{image_name}}-aurora:${tag}"
+    fi
+    echo "Built: {{image_name}}-aurora:${tag}"
 
 # Build all variants
-[group('Build Variants')]
+[group('Build')]
 build-all $tag=default_tag:
     just build-aurora "{{tag}}"
 

@@ -19,21 +19,39 @@ export PUB_CACHE=/usr/share/flutter/.pub-cache
 export PATH="$FLUTTER_DIR/bin:$PATH"
 export HOME=/root
 
-# Fix tar ownership errors - Flutter downloads tarballs with UIDs that don't exist in container
-# Flutter calls /usr/sbin/tar with absolute path, so we must replace it temporarily
-cp /usr/sbin/tar /usr/sbin/tar.real
-cat > /usr/sbin/tar << 'EOF'
+# TEAM_008: Fix tar ownership errors - Flutter downloads tarballs with UIDs that don't exist in container
+# Flutter calls tar with absolute path. We must wrap ALL tar binaries.
+_wrap_tar() {
+    local tar_path="$1"
+    if [[ -x "$tar_path" ]] && [[ ! -f "${tar_path}.real" ]]; then
+        cp "$tar_path" "${tar_path}.real"
+        cat > "$tar_path" << 'TARWRAPPER'
 #!/bin/bash
-exec /usr/sbin/tar.real --no-same-owner "$@"
-EOF
-chmod +x /usr/sbin/tar
+# TEAM_008: Wrapper to add --no-same-owner for container builds
+REAL_TAR="${0}.real"
+exec "$REAL_TAR" --no-same-owner "$@"
+TARWRAPPER
+        chmod +x "$tar_path"
+        echo "Wrapped $tar_path with --no-same-owner"
+    fi
+}
+_wrap_tar /usr/sbin/tar
+_wrap_tar /usr/bin/tar
 
 # Precache ALL platform binaries during build (filesystem is read-only at runtime)
 echo "Pre-caching Flutter binaries..."
 flutter precache --android --linux --web
 
-# Restore original tar
-mv /usr/sbin/tar.real /usr/sbin/tar
+# Restore original tar binaries
+_restore_tar() {
+    local tar_path="$1"
+    if [[ -f "${tar_path}.real" ]]; then
+        mv "${tar_path}.real" "$tar_path"
+        echo "Restored $tar_path"
+    fi
+}
+_restore_tar /usr/sbin/tar
+_restore_tar /usr/bin/tar
 
 # Disable analytics (Q1 resolution: use --no-analytics and ignore root warning)
 flutter config --no-analytics
