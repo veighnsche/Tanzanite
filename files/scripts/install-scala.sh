@@ -5,7 +5,7 @@ set -euo pipefail
 echo "=== Installing Scala ==="
 
 SCALA_VERSION="3.3.7"
-SBT_VERSION="1.10.7"
+SBT_VERSION="1.11.7"
 
 # Install Scala
 echo "Downloading Scala ${SCALA_VERSION}..."
