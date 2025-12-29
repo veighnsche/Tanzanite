@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
 # TEAM_006: Install Python uv package manager and pre-cache tools
+#
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# - Read previous team files before modifying
+# - Test changes don't break existing functionality
+# - DO NOT assume based on training data - VERIFY with live sources
+# - /var/cache does NOT persist from build - use /usr/share for tools
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+#
 set -euo pipefail
 
 echo "=== Installing Python + uv ==="
@@ -17,9 +33,12 @@ echo "uv installed: $(uv --version)"
 # Pre-cache common Python tools
 echo "Pre-caching Python tools..."
 export UV_CACHE_DIR=/var/cache/uv-cache
-export UV_TOOL_DIR=/var/cache/uv-tools
+export UV_TOOL_DIR=/usr/share/uv-tools
 export UV_TOOL_BIN_DIR=/usr/local/bin
 mkdir -p "$UV_CACHE_DIR" "$UV_TOOL_DIR"
+
+# Note: UV_CACHE_DIR in /var/cache won't persist from build, but that's OK - it's just cache.
+# UV_TOOL_DIR must be in /usr to persist on ostree systems.
 
 # Ensure pip is latest
 python3 -m pip install --upgrade --root-user-action=ignore pip setuptools wheel

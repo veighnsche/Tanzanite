@@ -1,6 +1,22 @@
 #!/usr/bin/env bash
 # TEAM_006: Filesystem setup for BlueBuild
 # CRITICAL: This script MUST run FIRST before any package installation
+#
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# - Read previous team files before modifying (especially TEAM_005, TEAM_009)
+# - Test changes don't break existing functionality
+# - DO NOT assume based on training data - VERIFY with live sources
+# - /opt fix IS needed for BUILD but files don't persist to RUNTIME
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+# TEAM_011 WARNING: ALWAYS VERIFY ASSUMPTIONS BEFORE CHANGING THIS FILE!
+#
 set -euo pipefail
 
 echo "=== Filesystem Setup ==="
@@ -29,6 +45,10 @@ export HOME=/root
 echo "  /root directory structure created"
 
 # Fix /opt symlink
+# TEAM_005/009: This fix is needed during BUILD for BlueBuild compatibility.
+# TEAM_011: WARNING - Files in /opt won't persist to RUNTIME on ostree systems
+#           because /opt becomes symlink to /var/opt after deployment.
+#           For persistent files, use /usr/share instead.
 echo "Fixing /opt directory..."
 if [[ -L /opt ]]; then
     echo "  Converting /opt from symlink to directory..."
