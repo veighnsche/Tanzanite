@@ -31,7 +31,7 @@ jobs:
       id-token: write
     steps:
       - name: Maximize build space
-        uses: ublue-os/remove-unwanted-software@v7
+        uses: ublue-os/remove-unwanted-software@v9
 
       - uses: blue-build/github-action@v1
         with:
